@@ -1,0 +1,10 @@
+{
+  "owner-id":690557429523546143,
+  "prefix":"你的機器人前綴",
+  "token":"你的機器人TOKEN",
+  "chat":{
+    "cd":60,
+    "max":25,
+    "min":15,
+    "blacklist-channel":[1234, 5678]
+  }
