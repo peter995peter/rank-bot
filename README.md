@@ -6,7 +6,7 @@
 
 1.  開啟`config.json`
 2.  填入 `owner-id` `prefix` `token`
-
+</br></br>
 > config.json各項設置
 
 </br>
