@@ -29,52 +29,74 @@ new = get["version"]
 @client.event
 #當機器人完成啟動時
 async def on_ready():
-    print('目前登入身份：', client.user)
     print("正在檢查版本")
     if now == new:
       print(f"版本檢查完成\n你正在使用最新版({now})!")
     else:
-        print(f"版本檢查完成\n你不是使用最新版({new})你正在使用{now}!\n是否自動更新(https://github.com/HansHans135/sign/blob/main/bot.py 偷來的.w.)")
-        i = 1
-        while i == 1:
-            a = input("你的選擇[y/n]:")
-            if a == "y" or a == "n":
-                if a == "y":
-                    print("下載中...")
-                    url = "https://raw.githubusercontent.com/peter995peter/rank-bot/main/bot.py"
-                    myfile = requests.get(url)
-                    open('bot.py', 'wb').write(myfile.content)
-                    print(f"下載完成!!重啟`bot.py`即可生效")
-                    i = 0
-                if a == "n":
-                    print(f"已取消下載")
-                    i = 0
-            else:
-                print("請輸入正確的回答")
+      print(f"版本檢查完成\n你不是使用最新版({new})你正在使用{now}!")
+    print('目前登入身份：', client.user)
 
 @client.event
 async def on_message(message):
-    for i in bc:
-      if messge.chnnel.id == i:
-        return
+  if message.author.bot != True:
     if message.content == f"{prefix}help":
       await message.channel.send("製作中")
-    if message.content == f"{prefix}rank":
+    if message.content == f"{prefix}top":
+      top = " "
       with open (f"rank.json") as filt:
         data = json.load(filt)
-      embed=discord.Embed(title="等級系統", description=f'等級：未設置\n經驗：{data[str(message.author.id)]["rank"]}', color=0xfff105)
-      embed.set_author(name=f"{message.author}", icon_url=f"{message.author.avatar_url}")
+      nl = 0
+      lr = 99999999
+      while nl < 10:
+        nl += 1
+        br = 0
+        bi = "無"
+        for i in data:
+          rank = data[i]["rank"]
+          if rank > br and rank < lr:
+            br = rank
+            bi = i
+        with open (f"level.json") as filt:
+          data2 = json.load(filt)
+        for i in data2:
+          if br > data2[i]:
+            bl = i
+        top = f"{top}\n第{nl}名 <@{bi}> 等級：{bl} 經驗：{br}"
+        lr = br
+      embed=discord.Embed(title="等級系統",description=top ,color=0xfff105)
       await message.channel.send(embed=embed)
+    if message.content.startswith(f"{prefix}rank"):
+      if message.mentions == []:
+        user = message.author
+      else:
+        user = message.mentions[0]
+      with open (f"rank.json") as filt:
+        data = json.load(filt)
+      for i in data:
+        if i == str(user.id):
+          with open (f"level.json") as filt:
+            data2 = json.load(filt)
+          for i in data2:
+            if data[str(user.id)]["rank"] > data2[i]:
+              bl = i
+          embed=discord.Embed(title="等級系統", description=f'等級：{bl}\n經驗：{data[str(user.id)]["rank"]}', color=0xfff105)
+          embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+          await message.channel.send(embed=embed)
+          return
+      await message.channel.send(f"<@{message.author.id}> 未找到該帳號,請先叫他聊天後再查詢")
     now_time = datetime.datetime.now() - datetime.datetime(1970, 1, 1)
     nt = round(now_time.total_seconds())
     #抓現在時間
     if message.content.startswith(prefix):
       return
+    for i in bc:
+      if message.channel.id == i:
+        return
     with open (f"rank.json") as filt:
       data = json.load(filt)
     for i in data:
       if i == str(message.author.id):
-        if data[i]["last-chat"] - cd <= nt:
+        if data[i]["last-chat"] <= nt - cd:
           gr = random.randrange(min,max)
           data[i]["rank"] = data[i]["rank"] + gr
           data[i]["last-chat"] = nt
@@ -85,6 +107,6 @@ async def on_message(message):
     data[str(message.author.id)]["last-chat"] = 0
     data[str(message.author.id)]["rank"] = 0
     with open (f"rank.json",mode="w") as filt:
-        json.dump(data,filt)
+        json.dump(data,filt)   
 
 client.run(token)
