@@ -19,7 +19,7 @@
 `chat-max`：單次聊天可以獲得的最高經驗</br>
 `chat-min`：單次聊天可以獲得的最低經驗</br>
 `chat-blacklist-channel`：沒有辦法獲得等級的頻道
-
+</br></br>
 > 各檔案說明
 
 </br>
