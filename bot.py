@@ -19,7 +19,7 @@ cd = config["chat"]["cd"]
 max = config["chat"]["max"]
 min = config["chat"]["min"]
 bc = config["chat"]["blacklist-channel"]
-now = "1.1.0" #請勿修改 不然你會被機器人叫去更新.w.
+now = "1.2.0" #請勿修改 不然你會被機器人叫去更新.w.
 
 r=requests.get('https://raw.githubusercontent.com/peter995peter/rank-bot/main/info.json')
 get = r.json()
