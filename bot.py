@@ -7,7 +7,7 @@ import os
 import requests
 
 #client 是我們與 Discord 連結的橋樑
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
 with open ("config.json",mode="r") as config:
@@ -80,7 +80,7 @@ async def on_message(message):
             if data[str(user.id)]["rank"] > data2[i]:
               bl = i
           embed=discord.Embed(title="等級系統", description=f'等級：{bl}\n經驗：{data[str(user.id)]["rank"]}', color=0xfff105)
-          embed.set_author(name=f"{user}", icon_url=f"{user.avatar_url}")
+          embed.set_author(name=f"{user}", icon_url=f"{user.avatar}")
           await message.channel.send(embed=embed)
           return
       await message.channel.send(f"<@{message.author.id}> 未找到該帳號,請先叫他聊天後再查詢")
@@ -100,13 +100,22 @@ async def on_message(message):
           gr = random.randrange(min,max)
           data[i]["rank"] = data[i]["rank"] + gr
           data[i]["last-chat"] = nt
-      with open (f"rank.json",mode="w") as filt:
-        json.dump(data,filt)
+          with open (f"rank.json",mode="w") as filt:
+            json.dump(data,filt)
+          with open (f"rank.json") as filt:
+              data = json.load(filt)
+          with open (f"level.json") as filt:
+              data2 = json.load(filt)
+          for i in data2:
+              if data[str(message.author.id)]["rank"] > data2[i]:
+                  bl = i
+                  if data[str(message.author.id)]["rank"]-gr<data2[i]:
+                      await message.channel.send(f"升級!\n{int(i)-1}->{i}")
       return
     data[str(message.author.id)] = {}
     data[str(message.author.id)]["last-chat"] = 0
     data[str(message.author.id)]["rank"] = 0
     with open (f"rank.json",mode="w") as filt:
-        json.dump(data,filt)   
+        json.dump(data,filt)
 
 client.run(token)
