@@ -111,7 +111,7 @@ async def on_message(message):
                   bl = i
                   if data[str(message.author.id)]["rank"]-gr<data2[i]:
                       await message.channel.send(f"升級!\n{int(i)-1}->{i}")
-      return
+        return
     data[str(message.author.id)] = {}
     data[str(message.author.id)]["last-chat"] = 0
     data[str(message.author.id)]["rank"] = 0
